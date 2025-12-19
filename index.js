@@ -14,6 +14,7 @@ function knightMoves([startX, startY], [endX, endY]) {
     let vertex = queue.shift();
     visited.push(vertex);
     let nextMoves = move(vertex.coord);
+    // could use Set to refine, but have to notice the array is reference tyep
     nextMoves = nextMoves.filter(([mX, mY]) => {
       return !visited.some((ver) => {
         return ver.x === mX && ver.y === mY;
