@@ -1,30 +1,46 @@
-class Node {
-  constructor(coord) {
-    this.coord = coord
-    this.parNode = null
+class Vertex {
+  constructor([x, y]) {
+    this.coord = [x, y];
+    this.x = x;
+    this.y = y;
+    this.parent = null;
   }
 }
-function knightMove([startX, startY], [endX, endY]) {
+function knightMoves([startX, startY], [endX, endY]) {
   if (startX === endX && startY === endY) throw new Error("pls move!!!");
-  let queue = [[startX, startY]];
-  let visited = [];//拿到目标坐标前的所有遍历的节点
-  while (queue[0][0] !== endX || queue[0][1] !== endY) {
-    let coord = queue.shift();
-    visited.push(coord);
-    let nextMoves = move(coord);
+  let queue = [new Vertex([startX, startY])];
+  let visited = [];
+  while (queue[0].x !== endX || queue[0].y !== endY) {
+    let vertex = queue.shift();
+    visited.push(vertex);
+    let nextMoves = move(vertex.coord);
     nextMoves = nextMoves.filter(([mX, mY]) => {
-      return !visited.some(([vX, vY]) => {
-        return vX === mX && vY === mY;
+      return !visited.some((ver) => {
+        return ver.x === mX && ver.y === mY;
       });
     });
-    
-    queue = queue.concat(nextMoves);
+    let nextVertices = nextMoves.map((move) => {
+      let v = new Vertex(move);
+      v.parent = vertex;
+      return v;
+    });
+    queue = queue.concat(nextVertices);
   }
-  
+  let v = queue.shift();
+  let arr = [];
+  while (v !== null) {
+    arr.unshift(v.coord);
+    v = v.parent;
+  }
+  console.log(`You made it in ${arr.length - 1} moves! Here's your path:`);
+  for (const v of arr) {
+    console.log(v);
+  }
 }
-
-knightMove([3, 3], [1, 1]);
-
+knightMoves([0, 0], [3, 3]);
+knightMoves([3, 3], [0, 0]);
+knightMoves([0, 0], [7, 7]);
+knightMoves([0, 0], [1, 2]);
 function move([x, y]) {
   let nextSteps = [];
   if (x + 2 <= 7 && y + 1 <= 7) {
@@ -53,20 +69,3 @@ function move([x, y]) {
   }
   return nextSteps;
 }
-// function knightMove([startX, startY], [endX, endY], visited = []) {
-//   if (startX === endX && startY === endY) {
-//     return visited;
-//   }
-//   let allPaths = [];
-//   let possibleMoves = move([startX, startY]);
-//   possibleMoves = possibleMoves.filter((move) => !visited.includes(move))
-//   visited.push([startX, startY]);
-//   possibleMoves.forEach((coord) =>
-//     allPaths.push(knightMove(coord, [endX, endY], visited))
-//   );
-//   let shortPath = allPaths[0];
-//   allPaths.forEach((path) => {
-//     if (path.length < shortPath) shortPath = path;
-//   });
-//   return shortPath;
-// }
