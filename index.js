@@ -41,31 +41,22 @@ knightMoves([0, 0], [3, 3]);
 knightMoves([3, 3], [0, 0]);
 knightMoves([0, 0], [7, 7]);
 knightMoves([0, 0], [1, 2]);
-function move([x, y]) {
+function move([mx, my]) {
   let nextSteps = [];
-  if (x + 2 <= 7 && y + 1 <= 7) {
-    nextSteps.push([x + 2, y + 1]);
-  }
-  if (x + 2 <= 7 && y - 1 >= 0) {
-    nextSteps.push([x + 2, y - 1]);
-  }
-  if (x - 2 >= 0 && y + 1 <= 7) {
-    nextSteps.push([x - 2, y + 1]);
-  }
-  if (x - 2 >= 0 && y - 1 >= 0) {
-    nextSteps.push([x - 2, y - 1]);
-  }
-  if (x + 1 <= 7 && y + 2 <= 7) {
-    nextSteps.push([x + 1, y + 2]);
-  }
-  if (x + 1 <= 7 && y - 2 >= 0) {
-    nextSteps.push([x + 1, y - 2]);
-  }
-  if (x - 1 >= 0 && y + 2 <= 7) {
-    nextSteps.push([x - 1, y + 2]);
-  }
-  if (x - 1 >= 0 && y - 2 >= 0) {
-    nextSteps.push([x - 1, y - 2]);
+  let OFFSETS = [
+    [2, 1],
+    [2, -1],
+    [-2, 1],
+    [-2, -1],
+    [1, 2],
+    [1, -2],
+    [-1, 2],
+    [-1, -2],
+  ];
+  for (const [x, y] of OFFSETS) {
+    if (mx + x >= 0 && mx + x <= 7 && my + y >= 0 && my + y <= 7) {
+      nextSteps.push([x + mx, y + my]);
+    }
   }
   return nextSteps;
 }
